@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ODE Basics | blog.twomatwo.me</title>
+<meta name="keywords" content="Math, Mathematical Analysis, ODE">
+<meta name="description" content="常微分方程初步(ODE) Flowchart of solving simple ODE equations
+[^1] 这里的齐次方程指可以化为$\frac{dy}{dx}=\phi\left({y \over x}\right)$的一阶微分方程, 而”一阶线性齐次方程”是在线性的基础上，没有仅为x的函数的项，二者含义不同。
+[^2] 对于二阶线性齐次微分方程
+$$ \begin{equation} y&rsquo;&rsquo;&#43;p(x)y&rsquo;&#43;q(x)y=0, \end{equation} $$
+可以发现
+$$ \frac{\mathrm d}{\mathrm d x}W(x)=-p(x)W(x), $$
+所以有
+$$ W(x)=W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}. $$
+若已知 $y_1 (x)$, 则
+$$ \frac{\mathrm d}{\mathrm d x}\left(\frac{y_2(x)}{y_1(x)}\right)=\frac{W(x)}{y_1^2(x)}=\frac{W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}}{y_1^2(x)}, $$
+两侧积分得 $\frac{y_2}{y_1}$, 进而可得 $y_2$
+[^3] 已知齐次方程的基本解组 $y_1(x),,y_2(x)$, 设非齐次方程有通解
+$$ y_0(x)=C_1(x)y_1(x)&#43;C_2(x)y_2(x), $$
+$$ y_0&rsquo;(x)=C_1y_1&rsquo;&#43;C_2y_2&rsquo;&#43;C_1&rsquo;y_2&#43;C_2&rsquo;y_2 $$
+为了求二阶导时避免出现 $C_1, C_2$的高阶导数, 不妨令
+$$ \begin{equation}C_1’y_1&#43;C_2’y_2=0\end{equation} $$
+则
+$$ y_0&rsquo;(x)=C_1y_1&rsquo;&#43;C_2y_2&#39; $$
+$$ y_0&rsquo;&rsquo;(x)=C_1y_1&rsquo;&rsquo;&#43;C_2y_2&rsquo;&rsquo;&#43;C_1&rsquo;y_1&rsquo;&#43;C_2&rsquo;y_2&#39; $$">
+<meta name="author" content="">
+<link rel="canonical" href="https://blog.twomatwo.me/posts/notes/ode-basics/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.bccfefac377bc340f06c260aed1bddf49a4354816d7c570d6aac75a997986c95.css" integrity="sha256-vM/vrDd7w0DwbCYK7Rvd9JpDVIFtfFcNaqx1qZeYbJU=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://blog.twomatwo.me/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://blog.twomatwo.me/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://blog.twomatwo.me/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://blog.twomatwo.me/apple-touch-icon.png">
+<link rel="mask-icon" href="https://blog.twomatwo.me/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          
+          throwOnError : false
+        });
+    });
+</script>
+
+<meta property="og:title" content="ODE Basics" />
+<meta property="og:description" content="常微分方程初步(ODE) Flowchart of solving simple ODE equations
+[^1] 这里的齐次方程指可以化为$\frac{dy}{dx}=\phi\left({y \over x}\right)$的一阶微分方程, 而”一阶线性齐次方程”是在线性的基础上，没有仅为x的函数的项，二者含义不同。
+[^2] 对于二阶线性齐次微分方程
+$$ \begin{equation} y&rsquo;&rsquo;&#43;p(x)y&rsquo;&#43;q(x)y=0, \end{equation} $$
+可以发现
+$$ \frac{\mathrm d}{\mathrm d x}W(x)=-p(x)W(x), $$
+所以有
+$$ W(x)=W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}. $$
+若已知 $y_1 (x)$, 则
+$$ \frac{\mathrm d}{\mathrm d x}\left(\frac{y_2(x)}{y_1(x)}\right)=\frac{W(x)}{y_1^2(x)}=\frac{W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}}{y_1^2(x)}, $$
+两侧积分得 $\frac{y_2}{y_1}$, 进而可得 $y_2$
+[^3] 已知齐次方程的基本解组 $y_1(x),,y_2(x)$, 设非齐次方程有通解
+$$ y_0(x)=C_1(x)y_1(x)&#43;C_2(x)y_2(x), $$
+$$ y_0&rsquo;(x)=C_1y_1&rsquo;&#43;C_2y_2&rsquo;&#43;C_1&rsquo;y_2&#43;C_2&rsquo;y_2 $$
+为了求二阶导时避免出现 $C_1, C_2$的高阶导数, 不妨令
+$$ \begin{equation}C_1’y_1&#43;C_2’y_2=0\end{equation} $$
+则
+$$ y_0&rsquo;(x)=C_1y_1&rsquo;&#43;C_2y_2&#39; $$
+$$ y_0&rsquo;&rsquo;(x)=C_1y_1&rsquo;&rsquo;&#43;C_2y_2&rsquo;&rsquo;&#43;C_1&rsquo;y_1&rsquo;&#43;C_2&rsquo;y_2&#39; $$" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.twomatwo.me/posts/notes/ode-basics/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-01-30T23:48:46+08:00" />
+<meta property="article:modified_time" content="2023-01-30T23:48:46+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ODE Basics"/>
+<meta name="twitter:description" content="常微分方程初步(ODE) Flowchart of solving simple ODE equations
+[^1] 这里的齐次方程指可以化为$\frac{dy}{dx}=\phi\left({y \over x}\right)$的一阶微分方程, 而”一阶线性齐次方程”是在线性的基础上，没有仅为x的函数的项，二者含义不同。
+[^2] 对于二阶线性齐次微分方程
+$$ \begin{equation} y&rsquo;&rsquo;&#43;p(x)y&rsquo;&#43;q(x)y=0, \end{equation} $$
+可以发现
+$$ \frac{\mathrm d}{\mathrm d x}W(x)=-p(x)W(x), $$
+所以有
+$$ W(x)=W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}. $$
+若已知 $y_1 (x)$, 则
+$$ \frac{\mathrm d}{\mathrm d x}\left(\frac{y_2(x)}{y_1(x)}\right)=\frac{W(x)}{y_1^2(x)}=\frac{W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}}{y_1^2(x)}, $$
+两侧积分得 $\frac{y_2}{y_1}$, 进而可得 $y_2$
+[^3] 已知齐次方程的基本解组 $y_1(x),,y_2(x)$, 设非齐次方程有通解
+$$ y_0(x)=C_1(x)y_1(x)&#43;C_2(x)y_2(x), $$
+$$ y_0&rsquo;(x)=C_1y_1&rsquo;&#43;C_2y_2&rsquo;&#43;C_1&rsquo;y_2&#43;C_2&rsquo;y_2 $$
+为了求二阶导时避免出现 $C_1, C_2$的高阶导数, 不妨令
+$$ \begin{equation}C_1’y_1&#43;C_2’y_2=0\end{equation} $$
+则
+$$ y_0&rsquo;(x)=C_1y_1&rsquo;&#43;C_2y_2&#39; $$
+$$ y_0&rsquo;&rsquo;(x)=C_1y_1&rsquo;&rsquo;&#43;C_2y_2&rsquo;&rsquo;&#43;C_1&rsquo;y_1&rsquo;&#43;C_2&rsquo;y_2&#39; $$"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Posts",
+      "item": "https://blog.twomatwo.me/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "notes",
+      "item": "https://blog.twomatwo.me/posts/notes/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  4 ,
+      "name": "ODE Basics",
+      "item": "https://blog.twomatwo.me/posts/notes/ode-basics/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ODE Basics",
+  "name": "ODE Basics",
+  "description": "常微分方程初步(ODE) Flowchart of solving simple ODE equations\n[^1] 这里的齐次方程指可以化为$\\frac{dy}{dx}=\\phi\\left({y \\over x}\\right)$的一阶微分方程, 而”一阶线性齐次方程”是在线性的基础上，没有仅为x的函数的项，二者含义不同。\n[^2] 对于二阶线性齐次微分方程\n$$ \\begin{equation} y\u0026rsquo;\u0026rsquo;+p(x)y\u0026rsquo;+q(x)y=0, \\end{equation} $$\n可以发现\n$$ \\frac{\\mathrm d}{\\mathrm d x}W(x)=-p(x)W(x), $$\n所以有\n$$ W(x)=W(x_0)\\mathrm{e}^{-\\int_{x_0}^x p(x),\\mathrm{d}x}. $$\n若已知 $y_1 (x)$, 则\n$$ \\frac{\\mathrm d}{\\mathrm d x}\\left(\\frac{y_2(x)}{y_1(x)}\\right)=\\frac{W(x)}{y_1^2(x)}=\\frac{W(x_0)\\mathrm{e}^{-\\int_{x_0}^x p(x),\\mathrm{d}x}}{y_1^2(x)}, $$\n两侧积分得 $\\frac{y_2}{y_1}$, 进而可得 $y_2$\n[^3] 已知齐次方程的基本解组 $y_1(x),,y_2(x)$, 设非齐次方程有通解\n$$ y_0(x)=C_1(x)y_1(x)+C_2(x)y_2(x), $$\n$$ y_0\u0026rsquo;(x)=C_1y_1\u0026rsquo;+C_2y_2\u0026rsquo;+C_1\u0026rsquo;y_2+C_2\u0026rsquo;y_2 $$\n为了求二阶导时避免出现 $C_1, C_2$的高阶导数, 不妨令\n$$ \\begin{equation}C_1’y_1+C_2’y_2=0\\end{equation} $$\n则\n$$ y_0\u0026rsquo;(x)=C_1y_1\u0026rsquo;+C_2y_2' $$\n$$ y_0\u0026rsquo;\u0026rsquo;(x)=C_1y_1\u0026rsquo;\u0026rsquo;+C_2y_2\u0026rsquo;\u0026rsquo;+C_1\u0026rsquo;y_1\u0026rsquo;+C_2\u0026rsquo;y_2' $$",
+  "keywords": [
+    "Math", "Mathematical Analysis", "ODE"
+  ],
+  "articleBody": "常微分方程初步(ODE) Flowchart of solving simple ODE equations\n[^1] 这里的齐次方程指可以化为$\\frac{dy}{dx}=\\phi\\left({y \\over x}\\right)$的一阶微分方程, 而”一阶线性齐次方程”是在线性的基础上，没有仅为x的函数的项，二者含义不同。\n[^2] 对于二阶线性齐次微分方程\n$$ \\begin{equation} y’’+p(x)y’+q(x)y=0, \\end{equation} $$\n可以发现\n$$ \\frac{\\mathrm d}{\\mathrm d x}W(x)=-p(x)W(x), $$\n所以有\n$$ W(x)=W(x_0)\\mathrm{e}^{-\\int_{x_0}^x p(x),\\mathrm{d}x}. $$\n若已知 $y_1 (x)$, 则\n$$ \\frac{\\mathrm d}{\\mathrm d x}\\left(\\frac{y_2(x)}{y_1(x)}\\right)=\\frac{W(x)}{y_1^2(x)}=\\frac{W(x_0)\\mathrm{e}^{-\\int_{x_0}^x p(x),\\mathrm{d}x}}{y_1^2(x)}, $$\n两侧积分得 $\\frac{y_2}{y_1}$, 进而可得 $y_2$\n[^3] 已知齐次方程的基本解组 $y_1(x),,y_2(x)$, 设非齐次方程有通解\n$$ y_0(x)=C_1(x)y_1(x)+C_2(x)y_2(x), $$\n$$ y_0’(x)=C_1y_1’+C_2y_2’+C_1’y_2+C_2’y_2 $$\n为了求二阶导时避免出现 $C_1, C_2$的高阶导数, 不妨令\n$$ \\begin{equation}C_1’y_1+C_2’y_2=0\\end{equation} $$\n则\n$$ y_0’(x)=C_1y_1’+C_2y_2' $$\n$$ y_0’’(x)=C_1y_1’’+C_2y_2’’+C_1’y_1’+C_2’y_2' $$\n将它们代入齐次方程, 得\n$$ \\begin{equation}C_1’y_1’+C_2’y_2’=f(x).\\end{equation} $$\n联立式(2), (3)即可求得 $C_1,C_2$.\n",
+  "wordCount" : "78",
+  "inLanguage": "en",
+  "datePublished": "2023-01-30T23:48:46+08:00",
+  "dateModified": "2023-01-30T23:48:46+08:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.twomatwo.me/posts/notes/ode-basics/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "blog.twomatwo.me",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.twomatwo.me/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://blog.twomatwo.me" accesskey="h" title="blog.twomatwo.me (Alt + H)">blog.twomatwo.me</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://blog.twomatwo.me/posts/" title="Index">
+                    <span>Index</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.twomatwo.me/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.twomatwo.me/archives/" title="Timeline">
+                    <span>Timeline</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://blog.twomatwo.me">Home</a>&nbsp;»&nbsp;<a href="https://blog.twomatwo.me/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://blog.twomatwo.me/posts/notes/">notes</a></div>
+    <h1 class="post-title">
+      ODE Basics
+    </h1>
+    <div class="post-meta"><span title='2023-01-30 23:48:46 +0800 CST'>January 30, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="常微分方程初步ode">常微分方程初步(ODE)<a hidden class="anchor" aria-hidden="true" href="#常微分方程初步ode">#</a></h1>
+<hr>
+<p><a href="ode-basics.png"> <img loading="lazy" src="ode-basics.png" alt=""  title="Flowchart of solving simple ODE equations"  />
+ </a>
+Flowchart of solving simple ODE equations</p>
+<h3 id="1">[^1]<a hidden class="anchor" aria-hidden="true" href="#1">#</a></h3>
+<p>这里的齐次方程指可以化为$\frac{dy}{dx}=\phi\left({y \over x}\right)$的一阶微分方程, 而”一阶线性齐次方程”是在线性的基础上，没有仅为x的函数的项，二者含义不同。</p>
+<h3 id="2">[^2]<a hidden class="anchor" aria-hidden="true" href="#2">#</a></h3>
+<p>对于二阶线性齐次微分方程</p>
+<p>$$
+\begin{equation}
+y&rsquo;&rsquo;+p(x)y&rsquo;+q(x)y=0,
+\end{equation}
+$$</p>
+<p>可以发现</p>
+<p>$$
+\frac{\mathrm d}{\mathrm d x}W(x)=-p(x)W(x),
+$$</p>
+<p>所以有</p>
+<p>$$
+W(x)=W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}.
+$$</p>
+<p>若已知 $y_1 (x)$, 则</p>
+<p>$$
+\frac{\mathrm d}{\mathrm d x}\left(\frac{y_2(x)}{y_1(x)}\right)=\frac{W(x)}{y_1^2(x)}=\frac{W(x_0)\mathrm{e}^{-\int_{x_0}^x p(x),\mathrm{d}x}}{y_1^2(x)},
+$$</p>
+<p>两侧积分得 $\frac{y_2}{y_1}$, 进而可得 $y_2$</p>
+<h3 id="3">[^3]<a hidden class="anchor" aria-hidden="true" href="#3">#</a></h3>
+<p>已知齐次方程的基本解组 $y_1(x),,y_2(x)$, 设非齐次方程有通解</p>
+<p>$$
+y_0(x)=C_1(x)y_1(x)+C_2(x)y_2(x),
+$$</p>
+<p>$$
+y_0&rsquo;(x)=C_1y_1&rsquo;+C_2y_2&rsquo;+C_1&rsquo;y_2+C_2&rsquo;y_2
+$$</p>
+<p>为了求二阶导时避免出现 $C_1, C_2$的高阶导数, 不妨令</p>
+<p>$$
+\begin{equation}C_1’y_1+C_2’y_2=0\end{equation}
+$$</p>
+<p>则</p>
+<p>$$
+y_0&rsquo;(x)=C_1y_1&rsquo;+C_2y_2'
+$$</p>
+<p>$$
+y_0&rsquo;&rsquo;(x)=C_1y_1&rsquo;&rsquo;+C_2y_2&rsquo;&rsquo;+C_1&rsquo;y_1&rsquo;+C_2&rsquo;y_2'
+$$</p>
+<p>将它们代入齐次方程, 得</p>
+<p>$$
+\begin{equation}C_1&rsquo;y_1&rsquo;+C_2&rsquo;y_2&rsquo;=f(x).\end{equation}
+$$</p>
+<p>联立式(2), (3)即可求得 $C_1,C_2$.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://blog.twomatwo.me/tags/math/">Math</a></li>
+      <li><a href="https://blog.twomatwo.me/tags/mathematical-analysis/">Mathematical Analysis</a></li>
+      <li><a href="https://blog.twomatwo.me/tags/ode/">ODE</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://blog.twomatwo.me/posts/blogs/test/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Test</span>
+  </a>
+  <a class="next" href="https://blog.twomatwo.me/posts/blogs/helloworld/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Helloworld</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://blog.twomatwo.me">blog.twomatwo.me</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
