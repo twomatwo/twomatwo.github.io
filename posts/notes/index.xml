@@ -16,4 +16,4 @@ $$ y_0&amp;rsquo;(x)=C_1y_1&amp;rsquo;+C_2y_2&amp;rsquo;+C_1&amp;rsquo;y_2+C_2&a
 $$ \begin{equation}C_1’y_1+C_2’y_2=0\end{equation} $$
 则
 $$ y_0&amp;rsquo;(x)=C_1y_1&amp;rsquo;+C_2y_2' $$
-$$ y_0&amp;rsquo;&amp;rsquo;(x)=C_1y_1&amp;rsquo;&amp;rsquo;+C_2y_2&amp;rsquo;&amp;rsquo;+C_1&amp;rsquo;y_1&amp;rsquo;+C_2&amp;rsquo;y_2' $$</description></item><item><title>简谐振动中的概念</title><link>https://blog.twomatwo.me/posts/notes/harmonic-oscillation-notions/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.twomatwo.me/posts/notes/harmonic-oscillation-notions/</guid><description>简谐振动中的概念 拍与拍频 考虑两频率不同的简谐运动的合成. 为了简单起见设振幅相同. $$ x=x_2+x_2=A[\cos(\omega_2t+\phi_2)+\cos(\omega_2t+\phi_2)]=2A\cos(frac{\omega_1+\omega_2}{2}t+frac{\phi_1+\phi_2}{2})\cos(frac{\omega_1+\omega_2}{2}t+frac{\phi_1+\phi_2}{2}) $$ 两者的振动频率几乎相同时, $\</description></item></channel></rss>
+$$ y_0&amp;rsquo;&amp;rsquo;(x)=C_1y_1&amp;rsquo;&amp;rsquo;+C_2y_2&amp;rsquo;&amp;rsquo;+C_1&amp;rsquo;y_1&amp;rsquo;+C_2&amp;rsquo;y_2' $$</description></item></channel></rss>
