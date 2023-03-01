@@ -52,6 +52,10 @@ menu:
       name: Timeline
       url: /archives/
       weight: 30
+    - identifier: diary
+      name: 日记
+      url: https://www.notion.so/twomatwo/log-f9cceab7ffcb410582cf75f8bdf5b2c5
+      weight: 40
 
 
 markup:
